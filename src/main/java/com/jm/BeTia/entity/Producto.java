@@ -5,11 +5,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 @Entity
-@Table(name = "productos")
+@Table(name = "product")
 @Data
 public class Producto implements Serializable {
 
-   // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(unique = true, nullable = false, name = "sku", length = 9)
     private String sku;

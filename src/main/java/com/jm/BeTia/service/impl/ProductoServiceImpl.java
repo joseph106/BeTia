@@ -10,12 +10,12 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -84,9 +84,7 @@ public class ProductoServiceImpl implements ProductoService {
                 } else {
                     productoRepository.save(productoMapper.toEntity(productoDTO));
                 }
-
             }
-
             workbook.close();
             return data;
 
@@ -94,6 +92,27 @@ public class ProductoServiceImpl implements ProductoService {
             e.printStackTrace();
             return null;
         }
-
     }
+
+    @Override
+    public Page<ProductoDTO> getProductos(Pageable pageable){
+        try {
+            Page<Producto> productos = productoRepository.findAll(pageable);
+            return productos.map(productoMapper::toDto);
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ProductoDTO getProductBySKU(String sku) {
+        try {
+            return productoMapper.toDto(productoRepository.findBySKU(sku));
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
 }
